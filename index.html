@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>ذہنی ریمائنڈر اردو ایپ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: 'Noto Naskh Arabic', serif;
+      background: linear-gradient(to right, #fce4ec, #e3f2fd);
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { color: #00796b; }
+    .box {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      margin-bottom: 30px;
+    }
+    button {
+      background-color: #388e3c;
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #2e7d32; }
+    audio { width: 100%; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h1>🌞 صبح کا ریمائنڈر</h1>
+    <audio id="morningAudio" controls></audio>
+  </div>
+
+  <div class="box">
+    <h1>🌙 نائٹ ریمائنڈر</h1>
+    <button onclick="playNightReminder()">🔁 چلائیں</button>
+    <audio id="nightAudio" controls></audio>
+  </div>
+
+  <script>
+    const audioBaseURL = "audios/";
+    const today = new Date().getDate();
+    const morningAudio = document.getElementById("morningAudio");
+    const nightAudio = document.getElementById("nightAudio");
+
+    morningAudio.src = `${audioBaseURL}audio-day-${today}.mp3`;
+
+    function playNightReminder() {
+      nightAudio.src = `${audioBaseURL}audio-night-${today}.mp3`;
+      nightAudio.play();
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        morningAudio.play().catch(() => {
+          console.log("User interaction required for autoplay.");
+        });
+      }, 1000);
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log("✅ Service Worker Registered"))
+        .catch(err => console.log("❌ SW Error:", err));
+    }
+  </script>
+</body>
+</html>
